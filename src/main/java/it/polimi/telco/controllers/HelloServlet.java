@@ -23,7 +23,8 @@ public class HelloServlet extends HttpServlet {
             Class.forName("com.mysql.cj.jdbc.Driver");
             DriverManager.getConnection(DB_URL, USER, null);
         } catch (Exception e) {
-            result = "Connection failed"; e.printStackTrace();
+            result = "Connection failed";
+            e.printStackTrace();
         }
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
