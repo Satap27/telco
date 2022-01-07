@@ -4,8 +4,6 @@
     <title>Title</title>
 </head>
 <body>
-success!!!!!!!!!!!!!!!!!!!!!
-    ${text}
-
+${text}
 </body>
 </html>

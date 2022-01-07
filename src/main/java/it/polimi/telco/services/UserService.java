@@ -22,7 +22,7 @@ public class UserService {
         return (em.find(User.class, userId));
     }
 
-    public Long checkCredentials(String username, String password) throws CredentialsException, NonUniqueResultException {
+    public User checkCredentials(String username, String password) throws CredentialsException, NonUniqueResultException {
         List<User> userList;
         try {
             userList = em.createNamedQuery("User.checkCredentials", User.class).setParameter(1, username)
@@ -33,8 +33,7 @@ public class UserService {
         if (userList.isEmpty())
             return null;
         else if (userList.size() == 1) {
-            User found = userList.get(0);
-            return found.getId();
+            return userList.get(0);
         }
         throw new NonUniqueResultException("More than one user registered with same credentials");
 

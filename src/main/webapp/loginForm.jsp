@@ -1,20 +1,17 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: campe
-  Date: 1/7/2022
-  Time: 6:11 PM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <form action="loginOperation" method="post">
-        <input type="text" name="username" />
-        <input type="text" name="password" />
-        <input type="submit" />
-    </form>
+    <title>Login page</title>
 </head>
 <body>
+<h1>Please log-in</h1>
 
+<form action="loginOperation" method="POST">
+    Username: <input type="text" name="username" required> <br>
+    Password: <input type="password" name="password" required><br>
+    <input type="submit" value="login">
+    <p>${errorMsg}</p>
+</form>
 </body>
 </html>
