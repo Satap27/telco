@@ -7,7 +7,7 @@
 <body>
 <h1>Please log-in</h1>
 
-<form action="loginOperation" method="POST">
+<form action="loginPage" method="POST">
     Username: <input type="text" name="username" required> <br>
     Password: <input type="password" name="password" required><br>
     <input type="submit" value="login">

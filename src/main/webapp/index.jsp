@@ -9,5 +9,6 @@
 </h1>
 <br/>
 <a href="loginPage">Login</a>
+<jsp:include page="userInformations.jsp" />
 </body>
 </html>

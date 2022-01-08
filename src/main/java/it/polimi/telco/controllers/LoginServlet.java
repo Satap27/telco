@@ -1,4 +1,4 @@
-package it.polimi.telco.controllers.login;
+package it.polimi.telco.controllers;
 
 import it.polimi.telco.exceptions.CredentialsException;
 import it.polimi.telco.model.User;
@@ -15,13 +15,19 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.io.IOException;
 
 @WebServlet(
-        name = "loginOperation",
+        name = "loginPage",
         description = "JSP Servlet With Annotations",
-        urlPatterns = {"/loginOperation"}
+        urlPatterns = {"/loginPage"}
 )
 public class LoginServlet extends HttpServlet {
     @EJB(name = "it.polimi.telco.services/UserService")
     private UserService userService;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/loginForm.jsp").forward(request, response);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -76,8 +82,8 @@ public class LoginServlet extends HttpServlet {
             // request.getSession().setAttribute("queryService", qService);
             //path = getServletContext().getContextPath() + "/GoToHomePage";
             //response.sendRedirect(path);
-            request.setAttribute("text", user.getUsername());
-            request.getRequestDispatcher("/successfulLoginRequest.jsp").forward(request, response);
+            path = getServletContext().getContextPath() + "/homepage";
+            response.sendRedirect(path);
         }
     }
 }
