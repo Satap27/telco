@@ -1,10 +1,7 @@
 package it.polimi.telco.controllers;
 
-import it.polimi.telco.exceptions.CredentialsException;
-import it.polimi.telco.model.User;
 import it.polimi.telco.services.UserService;
 import jakarta.ejb.EJB;
-import jakarta.persistence.NonUniqueResultException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,10 +12,10 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.io.IOException;
 
 @WebServlet(
-        name = "loginPage",
-        urlPatterns = {"/loginPage"}
+        name = "registrationPage",
+        urlPatterns = {"/registrationPage"}
 )
-public class LoginServlet extends HttpServlet {
+public class RegistrationServlet extends HttpServlet {
     @EJB(name = "it.polimi.telco.services/UserService")
     private UserService userService;
 
@@ -28,10 +25,12 @@ public class LoginServlet extends HttpServlet {
 
         String username;
         String password;
+        String email;
         try {
             username = StringEscapeUtils.escapeJava(request.getParameter("username"));
             password = StringEscapeUtils.escapeJava(request.getParameter("password"));
-            if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+            email = StringEscapeUtils.escapeJava(request.getParameter("email"));
+            if (username == null || password == null || email == null || username.isEmpty() || password.isEmpty() || email.isEmpty()) {
                 throw new Exception("Missing or empty credential value");
             }
 
@@ -39,22 +38,9 @@ public class LoginServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
             return;
         }
-        User user;
-        try {
-            user = userService.checkCredentials(username, password);
-        } catch (CredentialsException | NonUniqueResultException e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not check credentials");
-            return;
-        }
 
-        if (user == null) {
-            request.setAttribute("errorMsg", "Incorrect username or password");
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
-        } else {
-            request.getSession().setAttribute("user", user);
-            String path = getServletContext().getContextPath() + "/homepage";
-            response.sendRedirect(path);
-        }
+        userService.createUser(username, password, email);
+        String path = getServletContext().getContextPath() + "/landingPage";
+        response.sendRedirect(path);
     }
 }

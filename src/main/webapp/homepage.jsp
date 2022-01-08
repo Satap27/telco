@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Homepage</title>
 </head>
 <body>
-${text}
+<jsp:include page="userInformations.jsp" />
 </body>
 </html>
