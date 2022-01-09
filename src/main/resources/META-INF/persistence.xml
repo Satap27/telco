@@ -6,6 +6,11 @@
     <persistence-unit name="TelcoEJB" transaction-type="JTA">
         <jta-data-source>TelcoDB</jta-data-source>
         <class>it.polimi.telco.model.User</class>
+        <class>it.polimi.telco.model.Product</class>
+        <class>it.polimi.telco.model.ServicePackage</class>
+        <class>it.polimi.telco.model.ServiceSubscription</class>
+        <class>it.polimi.telco.model.TelcoService</class>
+        <class>it.polimi.telco.model.ValidityPeriod</class>
         <!--<properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/telco"/>
