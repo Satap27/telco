@@ -11,6 +11,7 @@
         <class>it.polimi.telco.model.ServiceSubscription</class>
         <class>it.polimi.telco.model.TelcoService</class>
         <class>it.polimi.telco.model.ValidityPeriod</class>
+        <class>it.polimi.telco.model.ServiceEntry</class>
         <!--<properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/telco"/>
