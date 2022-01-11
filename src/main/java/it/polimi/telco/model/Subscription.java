@@ -14,22 +14,26 @@ public class Subscription {
     private long id;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "fk_id_package")
     private ServicePackage servicePackage;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "fk_id_period")
     private ValidityPeriod validityPeriod;
 
-    @NotNull
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "subscription_product", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_subscription"), inverseJoinColumns = @JoinColumn(name = "fk_id_product"))
     private List<Product> products;
 
     @NotNull
     @OneToOne
+    @JoinColumn(name = "fk_id_user")
     private User user;
 
     @NotNull
+    @Column(name = "start_date")
     private Date startDate;
 
     public long getId() {
