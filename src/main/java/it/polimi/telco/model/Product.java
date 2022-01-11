@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "product", schema = "telco")
-@NamedQuery(name = "Product.getProductById", query = "SELECT p FROM Product p  WHERE p.id = ?1 ")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,10 +15,6 @@ public class Product {
 
     @NotNull
     private double monthlyFee;
-
-    @NotNull
-    @OneToOne
-    private ValidityPeriod validityPeriod;
 
     public long getId() {
         return id;
@@ -43,13 +38,5 @@ public class Product {
 
     public void setMonthlyFee(double monthlyFee) {
         this.monthlyFee = monthlyFee;
-    }
-
-    public ValidityPeriod getValidityPeriod() {
-        return validityPeriod;
-    }
-
-    public void setValidityPeriod(ValidityPeriod validityPeriod) {
-        this.validityPeriod = validityPeriod;
     }
 }

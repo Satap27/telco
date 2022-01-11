@@ -7,9 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "service_subscription", schema = "telco")
-@NamedQuery(name = "ServiceSubscription.getServiceSubscriptionById", query = "SELECT ss FROM ServiceSubscription ss  WHERE ss.id = ?1 ")
-public class ServiceSubscription {
+@Table(name = "subscription", schema = "telco")
+public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,6 +24,10 @@ public class ServiceSubscription {
     @NotNull
     @OneToMany
     private List<Product> products;
+
+    @NotNull
+    @OneToOne
+    private User user;
 
     @NotNull
     private Date startDate;
@@ -59,5 +62,21 @@ public class ServiceSubscription {
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 }

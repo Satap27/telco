@@ -8,7 +8,7 @@
         <class>it.polimi.telco.model.User</class>
         <class>it.polimi.telco.model.Product</class>
         <class>it.polimi.telco.model.ServicePackage</class>
-        <class>it.polimi.telco.model.ServiceSubscription</class>
+        <class>it.polimi.telco.model.Subscription</class>
         <class>it.polimi.telco.model.TelcoService</class>
         <class>it.polimi.telco.model.ValidityPeriod</class>
         <class>it.polimi.telco.model.ServiceEntry</class>

@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "validity_period", schema = "telco")
-@NamedQuery(name = "ValidityPeriod.getValidityPeriodById", query = "SELECT vp FROM ValidityPeriod vp  WHERE vp.id = ?1")
-//de schimbat
 public class ValidityPeriod {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

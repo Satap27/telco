@@ -7,7 +7,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "telco_service", schema = "telco")
-@NamedQuery(name = "TelcoService.getTelcoServiceById", query = "SELECT s FROM TelcoService s  WHERE s.id = ?1")
 public class TelcoService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

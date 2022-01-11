@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "service_entry", schema = "telco")
-@NamedQuery(name = "ServiceEntry.getServiceEntryById", query = "SELECT se FROM ServiceEntry se  WHERE se.id = ?1 ")
 public class ServiceEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
