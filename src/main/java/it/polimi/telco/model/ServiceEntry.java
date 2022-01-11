@@ -4,14 +4,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "service_entry", schema = "telco")
+@Table(name = "entry", schema = "telco")
 public class ServiceEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotNull
-    private String serviceEntryType;
+    private String type;
 
     @NotNull
     private int quantity;
@@ -27,12 +27,12 @@ public class ServiceEntry {
         this.id = id;
     }
 
-    public String getServiceEntryType() {
-        return serviceEntryType;
+    public String getType() {
+        return type;
     }
 
-    public void setServiceEntryType(String serviceEntryType) {
-        this.serviceEntryType = serviceEntryType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getQuantity() {

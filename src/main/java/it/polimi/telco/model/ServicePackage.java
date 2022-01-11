@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "service_package", schema = "telco")
+@Table(name = "package", schema = "telco")
 public class ServicePackage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,22 +16,23 @@ public class ServicePackage {
     private String name;
 
     @NotNull
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "package_service", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_package"), inverseJoinColumns = @JoinColumn(name = "fk_id_service"))
     private List<TelcoService> services;
 
     @NotNull
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "package_validity_period", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_package"), inverseJoinColumns = @JoinColumn(name = "fk_id_period"))
     private List<ValidityPeriod> availableValidityPeriods;
 
-    @NotNull
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "package_product", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_package"), inverseJoinColumns = @JoinColumn(name = "fk_id_product"))
     private List<Product> availableOptionalProducts;
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    @Id
     public Long getId() {
         return id;
     }

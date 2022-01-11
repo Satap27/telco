@@ -6,17 +6,18 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "telco_service", schema = "telco")
+@Table(name = "service", schema = "telco")
 public class TelcoService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotNull
-    private String serviceType;
+    private String type;
 
     @NotNull
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "service_entry", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_service"), inverseJoinColumns = @JoinColumn(name = "fk_id_entry"))
     private List<ServiceEntry> serviceEntries;
 
     public long getId() {
@@ -27,12 +28,12 @@ public class TelcoService {
         this.id = id;
     }
 
-    public String getServiceType() {
-        return serviceType;
+    public String getType() {
+        return type;
     }
 
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public List<ServiceEntry> getServiceEntries() {

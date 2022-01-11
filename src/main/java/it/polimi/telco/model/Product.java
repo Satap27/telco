@@ -14,6 +14,7 @@ public class Product {
     private String name;
 
     @NotNull
+    @Column(name = "monthly_fee")
     private double monthlyFee;
 
     public long getId() {
