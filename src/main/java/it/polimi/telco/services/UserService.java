@@ -18,7 +18,7 @@ public class UserService {
     public UserService() {
     }
 
-    public User findById(int userId) {
+    public User findUserById(long userId) {
         return (em.find(User.class, userId));
     }
 
