@@ -5,6 +5,8 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.List;
+
 @Stateless
 public class ServicePackageService {
     @PersistenceContext(unitName = "TelcoEJB")
@@ -15,5 +17,13 @@ public class ServicePackageService {
 
     public ServicePackage findServicePackageById(long servicePackageId) {
         return (em.find(ServicePackage.class, servicePackageId));
+    }
+
+    public List<ServicePackage> getAllServicePackages() throws Exception {
+        try {
+          return em.createNamedQuery("ServicePackage.getAllServicePackages",ServicePackage.class).getResultList();
+        } catch (Exception e) {
+            throw new Exception("Couldn't retrieve service packages");
+        }
     }
 }
