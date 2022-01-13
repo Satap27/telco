@@ -12,7 +12,13 @@
 <c:forEach items="${requestScope.servicePackages}" var="servicePackage">
     <div>
         <div>${servicePackage.name}</div>
-        <%--add whatever other attributes we decide to show--%>
+        <c:forEach items="${servicePackage.services}" var="service">
+            <div>${service.type}</div>
+        </c:forEach>
+        <c:forEach items="${servicePackage.availableValidityPeriods}" var="validityPeriod">
+            <div>${validityPeriod.numberOfMonths}</div>
+        </c:forEach>
+            <%--add whatever other attributes we decide to show--%>
     </div>
     <br>
 </c:forEach>

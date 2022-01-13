@@ -11,11 +11,11 @@ public class ValidityPeriod {
     private Long id;
 
     @NotNull
-    //@Column(name = "months")
+    @Column(name = "months")
     private int numberOfMonths;
 
     @NotNull
-    //@Column(name = "monthly_fee")
+    @Column(name = "monthly_fee")
     private double monthlyFee;
 
     public void setId(Long id) {
