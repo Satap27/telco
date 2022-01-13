@@ -22,7 +22,6 @@ public class ValidityPeriod {
         this.id = id;
     }
 
-    @Id
     public Long getId() {
         return id;
     }

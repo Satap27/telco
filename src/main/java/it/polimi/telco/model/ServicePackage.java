@@ -7,6 +7,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "package", schema = "telco")
+@NamedQuery(name = "ServicePackage.getAllServicePackages", query = "SELECT DISTINCT a FROM ServicePackage a" +
+        " LEFT JOIN FETCH a.services LEFT JOIN FETCH a.availableValidityPeriods")
 public class ServicePackage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
