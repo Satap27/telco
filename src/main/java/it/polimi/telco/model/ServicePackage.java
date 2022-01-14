@@ -7,8 +7,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "package", schema = "telco")
-@NamedQuery(name = "ServicePackage.getAllServicePackages", query = "SELECT DISTINCT a FROM ServicePackage a" +
-        " LEFT JOIN FETCH a.services LEFT JOIN FETCH a.availableValidityPeriods")
+@NamedQueries({
+        @NamedQuery(name = "ServicePackage.getAllServicePackages", query = "SELECT DISTINCT a FROM ServicePackage a" +
+                " LEFT JOIN FETCH a.services LEFT JOIN FETCH a.availableValidityPeriods"),
+        @NamedQuery(name = "ServicePackage.getAllServicePackagesDetailed", query = "SELECT DISTINCT a FROM ServicePackage a" +
+                " LEFT JOIN FETCH a.services LEFT JOIN FETCH a.availableValidityPeriods LEFT JOIN FETCH a.availableOptionalProducts")})
 public class ServicePackage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +34,12 @@ public class ServicePackage {
     @JoinTable(name = "package_product", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_package"), inverseJoinColumns = @JoinColumn(name = "fk_id_product"))
     private List<Product> availableOptionalProducts;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

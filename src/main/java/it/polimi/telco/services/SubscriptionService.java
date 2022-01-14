@@ -1,9 +1,14 @@
 package it.polimi.telco.services;
 
-import it.polimi.telco.model.Subscription;
+import it.polimi.telco.model.*;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Stateless
 public class SubscriptionService {
@@ -11,6 +16,35 @@ public class SubscriptionService {
     private EntityManager em;
 
     public SubscriptionService() {
+    }
+
+    public long createSubscription(int servicePackageId, int validityPeriodId, int[] optionalProductsId, Date startDate, User user) {
+        ServicePackage servicePackage = em.find(ServicePackage.class, servicePackageId);
+        ValidityPeriod validityPeriod = em.find(ValidityPeriod.class, validityPeriodId);
+        if (servicePackage == null || validityPeriod == null)
+            // TODO ok this exception?
+            throw new NoSuchElementException();
+        List<Product> productList = new ArrayList<>();
+        if (optionalProductsId != null) {
+            for (int optionalProductId : optionalProductsId) {
+                Product product = em.find(Product.class, optionalProductId);
+                if (product == null) {
+                    // TODO ok this exception?
+                    throw new NoSuchElementException();
+                }
+                productList.add(product);
+            }
+        }
+
+        Subscription subscription = new Subscription();
+        subscription.setServicePackage(servicePackage);
+        subscription.setValidityPeriod(validityPeriod);
+        subscription.setProducts(productList);
+        subscription.setUser(user);
+        subscription.setStartDate(startDate);
+        em.persist(subscription);
+        em.flush();
+        return subscription.getId();
     }
 
     public Subscription findSubscriptionById(long subscriptionId) {
