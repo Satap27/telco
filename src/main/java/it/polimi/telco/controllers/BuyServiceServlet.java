@@ -67,8 +67,14 @@ public class BuyServiceServlet extends HttpServlet {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        Subscription subscription =
-                subscriptionService.createSubscription(servicePackageId, validityPeriodId, optionalProductsId, startDate, user);
+        Subscription subscription;
+        try {
+            subscription = subscriptionService.createSubscription(servicePackageId, validityPeriodId, optionalProductsId, startDate, user);
+        } catch (Exception e) {
+            // TODO better message
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Constraint not met");
+            return;
+        }
         request.getSession().setAttribute("subscription", subscription);
         request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
     }
