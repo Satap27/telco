@@ -1,6 +1,7 @@
 package it.polimi.telco.controllers;
 
 import it.polimi.telco.model.ServicePackage;
+import it.polimi.telco.model.Subscription;
 import it.polimi.telco.model.User;
 import it.polimi.telco.services.ServicePackageService;
 import it.polimi.telco.services.SubscriptionService;
@@ -66,14 +67,9 @@ public class BuyServiceServlet extends HttpServlet {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
-            // TODO check where I should go
-            String path = getServletContext().getContextPath() + "/landingPage";
-            response.sendRedirect(path);
-        }
-        subscriptionService.createSubscription(servicePackageId, validityPeriodId, optionalProductsId, startDate, user);
-        // TODO should go to confirmation page
-        String path = getServletContext().getContextPath() + "/buyService";
-        response.sendRedirect(path);
+        Subscription subscription =
+                subscriptionService.createSubscription(servicePackageId, validityPeriodId, optionalProductsId, startDate, user);
+        request.getSession().setAttribute("subscription", subscription);
+        request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
     }
 }

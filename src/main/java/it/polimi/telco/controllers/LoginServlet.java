@@ -1,6 +1,7 @@
 package it.polimi.telco.controllers;
 
 import it.polimi.telco.exceptions.CredentialsException;
+import it.polimi.telco.model.Subscription;
 import it.polimi.telco.model.User;
 import it.polimi.telco.services.UserService;
 import jakarta.ejb.EJB;
@@ -53,7 +54,9 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         } else {
             request.getSession().setAttribute("user", user);
-            String path = getServletContext().getContextPath() + "/homepage";
+            Subscription subscription = (Subscription) request.getSession().getAttribute("subscription");
+            String path = getServletContext().getContextPath();
+            path += subscription == null ? "/homepage" : "/confirmation";
             response.sendRedirect(path);
         }
     }

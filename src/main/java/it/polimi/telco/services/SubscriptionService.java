@@ -18,7 +18,7 @@ public class SubscriptionService {
     public SubscriptionService() {
     }
 
-    public long createSubscription(int servicePackageId, int validityPeriodId, int[] optionalProductsId, Date startDate, User user) {
+    public Subscription createSubscription(int servicePackageId, int validityPeriodId, int[] optionalProductsId, Date startDate, User user) {
         ServicePackage servicePackage = em.find(ServicePackage.class, servicePackageId);
         ValidityPeriod validityPeriod = em.find(ValidityPeriod.class, validityPeriodId);
         if (servicePackage == null || validityPeriod == null)
@@ -40,8 +40,13 @@ public class SubscriptionService {
         subscription.setServicePackage(servicePackage);
         subscription.setValidityPeriod(validityPeriod);
         subscription.setProducts(productList);
-        subscription.setUser(user);
+        if (user != null)
+            subscription.setUser(user);
         subscription.setStartDate(startDate);
+        return subscription;
+    }
+
+    public long saveSubscription(Subscription subscription) {
         em.persist(subscription);
         em.flush();
         return subscription.getId();
