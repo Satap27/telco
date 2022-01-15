@@ -22,5 +22,7 @@
     </div>
     <br>
 </c:forEach>
+
+<a href="${pageContext.request.contextPath}/buyService">Buy service</a>
 </body>
 </html>

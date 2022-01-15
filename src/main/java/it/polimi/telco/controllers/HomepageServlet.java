@@ -2,7 +2,6 @@ package it.polimi.telco.controllers;
 
 import it.polimi.telco.model.ServicePackage;
 import it.polimi.telco.services.ServicePackageService;
-import it.polimi.telco.services.UserService;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,8 +17,6 @@ import java.util.List;
         urlPatterns = {"/homepage"}
 )
 public class HomepageServlet extends HttpServlet {
-    @EJB(name = "it.polimi.telco.services/UserService")
-    private UserService userService;
     @EJB(name = "it.polimi.telco.services/ServicePackageService")
     private ServicePackageService servicePackageService;
 

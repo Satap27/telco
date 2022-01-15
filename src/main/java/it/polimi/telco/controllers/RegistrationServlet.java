@@ -38,7 +38,7 @@ public class RegistrationServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
             return;
         }
-
+        // TODO handle if the user already exists?
         userService.createUser(username, password, email);
         String path = getServletContext().getContextPath() + "/landingPage";
         response.sendRedirect(path);

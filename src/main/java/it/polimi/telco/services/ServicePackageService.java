@@ -26,4 +26,12 @@ public class ServicePackageService {
             throw new Exception("Couldn't retrieve service packages");
         }
     }
+
+    public List<ServicePackage> getAllServicePackagesDetailed() throws Exception {
+        try {
+          return em.createNamedQuery("ServicePackage.getAllServicePackagesDetailed",ServicePackage.class).getResultList();
+        } catch (Exception e) {
+            throw new Exception("Couldn't retrieve service packages");
+        }
+    }
 }
