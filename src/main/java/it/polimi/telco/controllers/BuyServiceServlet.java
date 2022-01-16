@@ -2,7 +2,9 @@ package it.polimi.telco.controllers;
 
 import it.polimi.telco.model.ServicePackage;
 import it.polimi.telco.model.Subscription;
+
 import it.polimi.telco.model.User;
+import it.polimi.telco.services.PriceCalculationService;
 import it.polimi.telco.services.ServicePackageService;
 import it.polimi.telco.services.SubscriptionService;
 import jakarta.ejb.EJB;
@@ -27,6 +29,8 @@ public class BuyServiceServlet extends HttpServlet {
     private ServicePackageService servicePackageService;
     @EJB(name = "it.polimi.telco.services/SubscriptionService")
     private SubscriptionService subscriptionService;
+    @EJB(name = "it.polimi.telco.services/PriceCalculationService")
+    private PriceCalculationService calculationService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -75,6 +79,13 @@ public class BuyServiceServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Constraint not met");
             return;
         }
+        double totalPrice = 0;
+        try {
+            totalPrice = calculationService.calculateSubscriptionTotalPrice(subscription);
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Subscription");
+        }
+        request.getSession().setAttribute("totalPrice", totalPrice);
         request.getSession().setAttribute("subscription", subscription);
         request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
     }

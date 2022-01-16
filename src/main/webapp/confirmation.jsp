@@ -14,13 +14,12 @@
 <c:set var="validityPeriod" value="${subscription.getValidityPeriod()}"/>
 <c:set var="startDate" value="${subscription.getStartDate()}"/>
 <c:set var="optionalProducts" value="${subscription.getProducts()}"/>
-<c:set var="totalPrice" value="${validityPeriod.getMonthlyFee() * validityPeriod.getNumberOfMonths()}"/>
+
 <div>Service package: ${servicePackage.name}</div>
 <div>${validityPeriod.numberOfMonths} months - ${validityPeriod.monthlyFee} €/month</div>
 <c:if test="${optionalProducts != null}">
     <c:forEach items="${optionalProducts}" var="optionalProduct">
         <div>${optionalProduct.name} - ${optionalProduct.monthlyFee} €/month</div>
-        <c:set var="totalPrice" value="${totalPrice + optionalProduct.getMonthlyFee() * validityPeriod.getNumberOfMonths()}"/>
     </c:forEach>
 </c:if>
 <div>Starting on: ${startDate}</div>
