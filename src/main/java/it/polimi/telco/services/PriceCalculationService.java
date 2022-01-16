@@ -16,8 +16,8 @@ public class PriceCalculationService {
     }
 
     public double calculateSubscriptionTotalPrice(Subscription subscription) throws Exception {
-        double monthlyFee;
-        int nrOfMonths;
+        double monthlyFee = 0;
+        int nrOfMonths = 0;
         ValidityPeriod subscriptionValidityPeriod = subscription.getValidityPeriod();
         if (subscriptionValidityPeriod == null) {
             throw new Exception("Null Validity Period in subscription total price calculation");
