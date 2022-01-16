@@ -1,6 +1,7 @@
 package it.polimi.telco.services;
 
 import it.polimi.telco.model.*;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,6 +13,8 @@ import java.util.List;
 public class OrderService {
     @PersistenceContext(unitName = "TelcoEJB")
     private EntityManager em;
+    @EJB(name = "it.polimi.telco.services/PriceCalculationService")
+    private PriceCalculationService calculationService;
 
     public OrderService() {
     }
@@ -48,6 +51,6 @@ public class OrderService {
         order.setStartDate(subscriptionStartDate);
         order.setProducts(optionalProducts);
         order.setValidityPeriod(validityPeriod);
-        order.setTotalPrice(100); //totalPrice calculate from service
+        order.setTotalPrice(calculationService.calculateSubscriptionTotalPrice(subscription));
     }
 }
