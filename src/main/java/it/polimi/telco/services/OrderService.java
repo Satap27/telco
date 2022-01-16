@@ -15,8 +15,30 @@ public class OrderService {
     private EntityManager em;
     @EJB(name = "it.polimi.telco.services/PriceCalculationService")
     private PriceCalculationService calculationService;
+    @EJB(name = "it.polimi.telco.services/BillingService")
+    BillingService billingService;
 
     public OrderService() {
+    }
+
+    public void processOrder(Subscription subscription) throws Exception {
+        Order order = createOrderFromSubscription(subscription);
+        if(billingService.billOrder(order)){
+            order.setValid(true);
+        }else{
+            //set user insolvent
+        }
+    }
+    public Order createOrderFromSubscription(Subscription subscription) throws Exception {
+        if (subscription == null) {
+            throw new Exception("Subscription object is null");
+        }
+        Order order = new Order();
+        order.setCreationDate(new Date());
+        order.setValid(false);
+        populateOrderFromSubscription(subscription, order);
+        saveOrder(order);
+        return order;
     }
 
     public long saveOrder(Order order){
@@ -25,17 +47,7 @@ public class OrderService {
         return order.getId();
     }
 
-    public void createOrderFromSubscription(Subscription subscription) throws Exception {
-        if (subscription != null) {
-            Order order = new Order();
-            order.setCreationDate(new Date());
-            order.setValid(false);
-            populateOrderFromSubscription(subscription, order);
-            saveOrder(order);
-        }
-    }
-
-    private void populateOrderFromSubscription(Subscription subscription, Order order) throws Exception {
+    protected void populateOrderFromSubscription(Subscription subscription, Order order) throws Exception {
         User user = subscription.getUser();
         ServicePackage servicePackage = subscription.getServicePackage();
         ValidityPeriod validityPeriod = subscription.getValidityPeriod();

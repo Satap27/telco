@@ -48,10 +48,10 @@ public class ConfirmationServlet extends HttpServlet {
         try {
             subscriptionService.saveSubscription(subscription);
             request.getSession().removeAttribute("subscription");
-            orderService.createOrderFromSubscription(subscription);
+            orderService.processOrder(subscription);
             // TODO than should mark as valid or invalid
         } catch (Exception e) {
-           // TODO rollback and restore session?
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "There was a problem when creating the order");
         }
         String path = getServletContext().getContextPath() + "/homepage";
         response.sendRedirect(path);
