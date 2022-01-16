@@ -1,5 +1,6 @@
 package it.polimi.telco.services;
 
+import it.polimi.telco.exceptions.InvalidSubscription;
 import it.polimi.telco.model.*;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -15,29 +16,25 @@ public class SubscriptionService {
     public SubscriptionService() {
     }
 
-    private void checkConstraints(ServicePackage servicePackage, ValidityPeriod validityPeriod, List<Product> productList) throws Exception {
+    private void checkConstraints(ServicePackage servicePackage, ValidityPeriod validityPeriod, List<Product> productList) throws InvalidSubscription {
         if (!servicePackage.getAvailableValidityPeriods().contains(validityPeriod))
-            // TODO better exception
-            throw new Exception("");
+            throw new InvalidSubscription("Invalid validity period for the selected service package");
         for (Product product : productList) {
             if (!servicePackage.getAvailableOptionalProducts().contains(product))
-                // TODO better exception
-                throw new Exception("");
+                throw new InvalidSubscription("Invalid optional product for the selected service package");
         }
     }
 
-    public Subscription createSubscription(int servicePackageId, int validityPeriodId, int[] optionalProductsId, Date startDate, User user) throws Exception {
+    public Subscription createSubscription(int servicePackageId, int validityPeriodId, int[] optionalProductsId, Date startDate, User user) throws InvalidSubscription, NoSuchElementException {
         ServicePackage servicePackage = em.find(ServicePackage.class, servicePackageId);
         ValidityPeriod validityPeriod = em.find(ValidityPeriod.class, validityPeriodId);
         if (servicePackage == null || validityPeriod == null)
-            // TODO ok this exception?
             throw new NoSuchElementException();
         List<Product> productList = new ArrayList<>();
         if (optionalProductsId != null) {
             for (int optionalProductId : optionalProductsId) {
                 Product product = em.find(Product.class, optionalProductId);
                 if (product == null) {
-                    // TODO ok this exception?
                     throw new NoSuchElementException();
                 }
                 productList.add(product);
@@ -53,12 +50,6 @@ public class SubscriptionService {
             subscription.setUser(user);
         subscription.setStartDate(startDate);
         return subscription;
-    }
-
-    public long saveSubscription(Subscription subscription) {
-        em.persist(subscription);
-        em.flush();
-        return subscription.getId();
     }
 
     public Subscription findSubscriptionById(long subscriptionId) {

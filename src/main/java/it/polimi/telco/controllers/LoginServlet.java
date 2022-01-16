@@ -44,7 +44,6 @@ public class LoginServlet extends HttpServlet {
         try {
             user = userService.checkCredentials(username, password);
         } catch (CredentialsException | NonUniqueResultException e) {
-            e.printStackTrace();
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not check credentials");
             return;
         }
