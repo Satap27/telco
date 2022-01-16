@@ -20,6 +20,8 @@ public class OrderService {
     private EntityManager em;
     @EJB(name = "it.polimi.telco.services/PriceCalculationService")
     private PriceCalculationService calculationService;
+    @EJB(name = "it.polimi.telco.services/PriceCalculationService")
+    private ActivationScheduleService activationScheduleService;
 
     public OrderService() {
     }
@@ -29,11 +31,7 @@ public class OrderService {
         try {
             subscription.setUser(user);
             Order order = createOrderFromSubscription(subscription);
-            if (billingService.billOrder(order)) {
-                order.setValid(true);
-            } else {
-                //set user insolvent
-            }
+            billingOrder(order);
             em.persist(subscription);
             em.persist(order);
             em.flush();
@@ -71,5 +69,14 @@ public class OrderService {
         order.setProducts(optionalProducts);
         order.setValidityPeriod(validityPeriod);
         order.setTotalPrice(calculationService.calculateSubscriptionTotalPrice(subscription));
+    }
+
+    private void billingOrder(Order order) {
+        if (billingService.billOrder(order)) {
+            order.setValid(true);
+            activationScheduleService.createServiceActivationRecordForOrder(order);
+        } else {
+            order.getUser().setInsolvent(true);
+        }
     }
 }

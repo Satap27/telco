@@ -24,6 +24,8 @@ public class User implements Serializable {
 
     private String email;
 
+    @NotNull
+    private boolean insolvent;
 
     public User() {
     }
@@ -58,6 +60,14 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isInsolvent() {
+        return insolvent;
+    }
+
+    public void setInsolvent(boolean insolvent) {
+        this.insolvent = insolvent;
     }
 }
 

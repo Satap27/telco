@@ -29,6 +29,7 @@ public class UserService {
             user.setUsername(username);
             user.setPassword(password);
             user.setEmail(email);
+            user.setInsolvent(false);
             em.persist(user);
             em.flush();
             return user.getId();
