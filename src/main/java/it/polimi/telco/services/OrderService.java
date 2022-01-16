@@ -25,7 +25,7 @@ public class OrderService {
     public void createOrderFromSubscription(Subscription subscription) throws Exception {
         if (subscription != null) {
             Order order = new Order();
-            order.setDateOfCreation(new Date());
+            order.setCreationDate(new Date());
             order.setValid(false);
             populateOrderFromSubscription(subscription, order);
             saveOrder(order);
@@ -45,8 +45,8 @@ public class OrderService {
 
         order.setUser(user);
         order.setServicePackage(servicePackage);
-        order.setSubscriptionStartDate(subscriptionStartDate);
-        order.setOptionalProductList(optionalProducts);
+        order.setStartDate(subscriptionStartDate);
+        order.setProducts(optionalProducts);
         order.setValidityPeriod(validityPeriod);
         order.setTotalPrice(100); //totalPrice calculate from service
     }

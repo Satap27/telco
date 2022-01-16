@@ -14,39 +14,53 @@ public class Order {
     private Long id;
 
     @NotNull
-    private Date dateOfCreation;
+    @Column(name = "creation_date")
+    private Date creationDate;
 
     @NotNull
     @OneToOne
+    @JoinColumn(name = "fk_id_user")
     private User user;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "fk_id_package")
     private ServicePackage servicePackage;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "fk_id_period")
     private ValidityPeriod validityPeriod;
 
-    @NotNull
-    @OneToMany
-    List<Product> optionalProductList;
+    @ManyToMany
+    @JoinTable(name = "order_product", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_order"), inverseJoinColumns = @JoinColumn(name = "fk_id_product"))
+    private List<Product> products;
 
     @NotNull
-    public double totalPrice;
+    @Column(name = "total_price")
+    private double totalPrice;
 
     @NotNull
-    public Date subscriptionStartDate;
+    @Column(name = "start_date")
+    private Date startDate;
 
     @NotNull
     private boolean valid;
 
-    public Date getDateOfCreation() {
-        return dateOfCreation;
+    public Long getId() {
+        return id;
     }
 
-    public void setDateOfCreation(Date dateOfCreation) {
-        this.dateOfCreation = dateOfCreation;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public User getUser() {
@@ -73,12 +87,12 @@ public class Order {
         this.validityPeriod = validityPeriod;
     }
 
-    public List<Product> getOptionalProductList() {
-        return optionalProductList;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setOptionalProductList(List<Product> optionalProductList) {
-        this.optionalProductList = optionalProductList;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public double getTotalPrice() {
@@ -89,12 +103,12 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public Date getSubscriptionStartDate() {
-        return subscriptionStartDate;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setSubscriptionStartDate(Date subscriptionStartDate) {
-        this.subscriptionStartDate = subscriptionStartDate;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
     public boolean isValid() {
@@ -103,14 +117,5 @@ public class Order {
 
     public void setValid(boolean valid) {
         this.valid = valid;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Id
-    public Long getId() {
-        return id;
     }
 }
