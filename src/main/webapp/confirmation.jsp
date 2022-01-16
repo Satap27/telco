@@ -10,6 +10,7 @@
 <h4>Subscription</h4>
 <c:set var="user" value="${sessionScope.user}"/>
 <c:set var="subscription" value="${sessionScope.subscription}"/>
+<c:set var="totalPrice" value="${sessionScope.totalPrice}"/>
 <c:set var="servicePackage" value="${subscription.getServicePackage()}"/>
 <c:set var="validityPeriod" value="${subscription.getValidityPeriod()}"/>
 <c:set var="startDate" value="${subscription.getStartDate()}"/>
