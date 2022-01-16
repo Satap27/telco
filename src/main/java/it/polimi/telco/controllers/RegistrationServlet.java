@@ -1,5 +1,6 @@
 package it.polimi.telco.controllers;
 
+import it.polimi.telco.exceptions.ExistingUserException;
 import it.polimi.telco.services.UserService;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
@@ -21,7 +22,7 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException, ServletException {
 
         String username;
         String password;
@@ -31,15 +32,20 @@ public class RegistrationServlet extends HttpServlet {
             password = StringEscapeUtils.escapeJava(request.getParameter("password"));
             email = StringEscapeUtils.escapeJava(request.getParameter("email"));
             if (username == null || password == null || email == null || username.isEmpty() || password.isEmpty() || email.isEmpty()) {
-                throw new Exception("Missing or empty credential value");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
+                return;
             }
-
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing credential value");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid values");
             return;
         }
-        // TODO handle if the user already exists?
-        userService.createUser(username, password, email, "user");
+        try {
+            userService.createUser(username, password, email);
+        } catch (ExistingUserException e) {
+            request.setAttribute("registrationErrorMsg", "Username already in use");
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            return;
+        }
         String path = getServletContext().getContextPath() + "/landingPage";
         response.sendRedirect(path);
     }

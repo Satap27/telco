@@ -1,5 +1,7 @@
 package it.polimi.telco.controllers;
 
+import it.polimi.telco.exceptions.InvalidOrder;
+import it.polimi.telco.exceptions.InvalidSubscription;
 import it.polimi.telco.model.Subscription;
 import it.polimi.telco.model.User;
 import it.polimi.telco.services.OrderService;
@@ -36,7 +38,7 @@ public class ConfirmationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
         Subscription subscription = (Subscription) request.getSession().getAttribute("subscription");
         User user = (User) request.getSession().getAttribute("user");
@@ -44,14 +46,13 @@ public class ConfirmationServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid values");
             return;
         }
-        subscription.setUser(user);
         try {
-            subscriptionService.saveSubscription(subscription);
+            orderService.processOrder(subscription, user);
+            // if an exception is raised the subscription won't be removed from the session
             request.getSession().removeAttribute("subscription");
-            orderService.createOrderFromSubscription(subscription);
-            // TODO than should mark as valid or invalid
-        } catch (Exception e) {
-           // TODO rollback and restore session?
+        } catch (InvalidOrder | InvalidSubscription e) {
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
+            return;
         }
         String path = getServletContext().getContextPath() + "/homepage";
         response.sendRedirect(path);

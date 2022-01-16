@@ -1,5 +1,6 @@
 package it.polimi.telco.controllers;
 
+import it.polimi.telco.exceptions.InvalidSubscription;
 import it.polimi.telco.model.ServicePackage;
 import it.polimi.telco.model.Subscription;
 
@@ -19,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @WebServlet(
         name = "buyService",
@@ -63,7 +65,8 @@ public class BuyServiceServlet extends HttpServlet {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             startDate = simpleDateFormat.parse(startDateStr);
             if (startDate == null) {
-                throw new Exception("Missing starting date");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing starting date");
+                return;
             }
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid values");
@@ -72,14 +75,17 @@ public class BuyServiceServlet extends HttpServlet {
 
         User user = (User) request.getSession().getAttribute("user");
         Subscription subscription;
+        double totalPrice = 0;
+
         try {
             subscription = subscriptionService.createSubscription(servicePackageId, validityPeriodId, optionalProductsId, startDate, user);
-        } catch (Exception e) {
-            // TODO better message
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Constraint not met");
+        } catch (InvalidSubscription e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Service package constraint are not met: " + e.getMessage());
+            return;
+        } catch (NoSuchElementException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid subscription paramenters");
             return;
         }
-        double totalPrice = 0;
         try {
             totalPrice = calculationService.calculateSubscriptionTotalPrice(subscription);
         } catch (Exception e) {

@@ -20,6 +20,7 @@
     Password: <input type="password" name="password" required><br>
     Email: <input type="email" name="email" required><br>
     <input type="submit" value="REGISTER">
+    <p>${registrationErrorMsg}</p>
 </form>
 </body>
 </html>

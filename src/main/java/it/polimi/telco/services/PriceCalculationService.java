@@ -1,5 +1,6 @@
 package it.polimi.telco.services;
 
+import it.polimi.telco.exceptions.InvalidSubscription;
 import it.polimi.telco.model.Product;
 import it.polimi.telco.model.Subscription;
 import it.polimi.telco.model.ValidityPeriod;
@@ -15,12 +16,12 @@ public class PriceCalculationService {
     public PriceCalculationService() {
     }
 
-    public double calculateSubscriptionTotalPrice(Subscription subscription) throws Exception {
+    public double calculateSubscriptionTotalPrice(Subscription subscription) throws InvalidSubscription {
         double monthlyFee;
         int nrOfMonths;
         ValidityPeriod subscriptionValidityPeriod = subscription.getValidityPeriod();
         if (subscriptionValidityPeriod == null) {
-            throw new Exception("Null Validity Period in subscription total price calculation");
+            throw new InvalidSubscription("Null validity period in subscription");
         }
         monthlyFee = subscriptionValidityPeriod.getMonthlyFee();
         nrOfMonths = subscriptionValidityPeriod.getNumberOfMonths();
