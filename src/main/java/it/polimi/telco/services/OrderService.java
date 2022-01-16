@@ -26,6 +26,20 @@ public class OrderService {
     public OrderService() {
     }
 
+    public List<Order> getRejectedOrdersForInsolventUser(User user){
+        if(!user.isInsolvent()){
+            return null;
+        }
+        List<Order> invalidOrder;
+        try {
+            invalidOrder = em.createNamedQuery("Order.getRejectedOrdersForUserId", Order.class).setParameter(1, user.getId())
+                    .getResultList();
+        } catch (PersistenceException e) {
+            throw new PersistenceException("Couldn't retrieve the invalid orders ");
+        }
+        return invalidOrder;
+    }
+
     public void processOrder(Subscription subscription, User user) throws InvalidOrder, InvalidSubscription {
         // Inserting both subscription and order into the database inside the same transaction
         try {
