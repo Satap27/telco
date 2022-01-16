@@ -5,7 +5,9 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Stateless
 public class ProductService {
@@ -34,5 +36,19 @@ public class ProductService {
 
     public Product findProductById(long productId) {
         return (em.find(Product.class, productId));
+    }
+
+    public List<Product> findProductsById (long[] productsId) throws NoSuchElementException{
+        List<Product> products = new ArrayList<>();
+        if (productsId != null) {
+            for (long productId : productsId) {
+                Product product = findProductById(productId);
+                if (product == null) {
+                    throw new NoSuchElementException("Product not found");
+                }
+                products.add(product);
+            }
+        }
+        return products;
     }
 }

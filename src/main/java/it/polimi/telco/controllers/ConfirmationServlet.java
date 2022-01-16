@@ -1,7 +1,7 @@
 package it.polimi.telco.controllers;
 
-import it.polimi.telco.exceptions.InvalidOrder;
-import it.polimi.telco.exceptions.InvalidSubscription;
+import it.polimi.telco.exceptions.InvalidOrderException;
+import it.polimi.telco.exceptions.InvalidSubscriptionException;
 import it.polimi.telco.model.Subscription;
 import it.polimi.telco.model.User;
 import it.polimi.telco.services.OrderService;
@@ -50,7 +50,7 @@ public class ConfirmationServlet extends HttpServlet {
             orderService.processOrder(subscription, user);
             // if an exception is raised the subscription won't be removed from the session
             request.getSession().removeAttribute("subscription");
-        } catch (InvalidOrder | InvalidSubscription e) {
+        } catch (InvalidOrderException | InvalidSubscriptionException e) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
             return;
         }

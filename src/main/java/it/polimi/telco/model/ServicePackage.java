@@ -21,13 +21,11 @@ public class ServicePackage {
     private String name;
 
     @NotNull
-    @ManyToMany
-    @JoinTable(name = "package_service", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_package"), inverseJoinColumns = @JoinColumn(name = "fk_id_service"))
+    @OneToMany(mappedBy = "servicePackage", cascade = CascadeType.ALL)
     private List<TelcoService> services;
 
     @NotNull
-    @ManyToMany
-    @JoinTable(name = "package_validity_period", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_package"), inverseJoinColumns = @JoinColumn(name = "fk_id_period"))
+    @OneToMany(mappedBy = "servicePackage", cascade = CascadeType.ALL)
     private List<ValidityPeriod> availableValidityPeriods;
 
     @ManyToMany
@@ -56,6 +54,9 @@ public class ServicePackage {
 
     public void setServices(List<TelcoService> services) {
         this.services = services;
+        for (TelcoService service: services) {
+            service.setServicePackage(this);
+        }
     }
 
     public List<ValidityPeriod> getAvailableValidityPeriods() {
@@ -64,6 +65,9 @@ public class ServicePackage {
 
     public void setAvailableValidityPeriods(List<ValidityPeriod> availableValidityPeriods) {
         this.availableValidityPeriods = availableValidityPeriods;
+        for (ValidityPeriod validityPeriod: availableValidityPeriods) {
+            validityPeriod.setServicePackage(this);
+        }
     }
 
     public List<Product> getAvailableOptionalProducts() {

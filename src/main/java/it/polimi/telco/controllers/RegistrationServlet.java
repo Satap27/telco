@@ -40,7 +40,7 @@ public class RegistrationServlet extends HttpServlet {
             return;
         }
         try {
-            userService.createUser(username, password, email);
+            userService.createUser(username, password, email, "user");
         } catch (ExistingUserException e) {
             request.setAttribute("registrationErrorMsg", "Username already in use");
             request.getRequestDispatcher("/index.jsp").forward(request, response);

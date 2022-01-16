@@ -2,7 +2,6 @@ package it.polimi.telco.controllers;
 
 import it.polimi.telco.services.ProductService;
 import jakarta.ejb.EJB;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,19 +20,22 @@ public class ProductCreationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
         String name;
         double monthlyFee;
         try {
             name = StringEscapeUtils.escapeJava(request.getParameter("product-name"));
             monthlyFee = Double.parseDouble(request.getParameter("product-monthly-fee"));
-            if (name == null || name.isEmpty() || monthlyFee < 0) {
-                throw new Exception("Missing or empty product name");
+            if (monthlyFee < 0) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Monthly fee can't be a negative number");
+                return;
             }
-
+            if (name == null || name.isEmpty()) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or empty product name");
+            }
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or empty product name");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid values");
             return;
         }
         productService.createProduct(name, monthlyFee);

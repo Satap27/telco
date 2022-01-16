@@ -19,6 +19,21 @@ public class ServiceEntry {
     @NotNull
     private double fee;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "fk_id_service")
+    private TelcoService service;
+
+    public ServiceEntry(String type, int quantity, double fee) {
+        this.type = type;
+        this.quantity = quantity;
+        this.fee = fee;
+    }
+
+    public ServiceEntry() {
+
+    }
+
     public long getId() {
         return id;
     }
@@ -49,5 +64,13 @@ public class ServiceEntry {
 
     public void setFee(double fee) {
         this.fee = fee;
+    }
+
+    public TelcoService getService() {
+        return service;
+    }
+
+    public void setService(TelcoService service) {
+        this.service = service;
     }
 }

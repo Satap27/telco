@@ -1,5 +1,6 @@
 package it.polimi.telco.services;
 
+import it.polimi.telco.exceptions.InvalidServicePackageException;
 import it.polimi.telco.model.Product;
 import it.polimi.telco.model.ServicePackage;
 import it.polimi.telco.model.TelcoService;
@@ -7,10 +8,9 @@ import it.polimi.telco.model.ValidityPeriod;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Stateless
 public class ServicePackageService {
@@ -24,46 +24,21 @@ public class ServicePackageService {
         return (em.find(ServicePackage.class, servicePackageId));
     }
 
-    public long createServicePackage(String name, long[] optionalProductsId, long[] validityPeriodsId, long[] servicesId) throws Exception {
-        List<Product> products = new ArrayList<>();
-        if (optionalProductsId != null) {
-            for (long optionalProductId : optionalProductsId) {
-                Product product = em.find(Product.class, optionalProductId);
-                if (product == null) {
-                    // TODO ok this exception?
-                    throw new NoSuchElementException();
-                }
-                products.add(product);
-            }
+    public long createServicePackage(String name, List<Product> optionalProducts, List<ValidityPeriod> validityPeriods, List<TelcoService> services) throws InvalidServicePackageException {
+        try {
+            ServicePackage servicePackage = new ServicePackage();
+            servicePackage.setName(name);
+            servicePackage.setAvailableOptionalProducts(optionalProducts);
+            servicePackage.setAvailableValidityPeriods(validityPeriods); // updates both sides of the relationship
+            servicePackage.setServices(services); // updates both sides of the relationship
+            em.persist(servicePackage); // all the other objects are also persisted via cascading
+            em.flush();
+            return servicePackage.getId();
         }
-
-        List<ValidityPeriod> validityPeriods = new ArrayList<>();
-        for (long validityPeriodId : validityPeriodsId) {
-            ValidityPeriod validityPeriod = em.find(ValidityPeriod.class, validityPeriodId);
-            if (validityPeriod == null) {
-                // TODO ok this exception?
-                throw new NoSuchElementException();
-            }
-            validityPeriods.add(validityPeriod);
+        catch (PersistenceException e) {
+            e.printStackTrace();
+            throw new InvalidServicePackageException("Invalid service package");
         }
-
-        List<TelcoService> services = new ArrayList<>();
-        for (long serviceId : servicesId) {
-            TelcoService telcoService = em.find(TelcoService.class, serviceId);
-            if (telcoService == null) {
-                // TODO ok this exception?
-                throw new NoSuchElementException();
-            }
-            services.add(telcoService);
-        }
-        ServicePackage servicePackage = new ServicePackage();
-        servicePackage.setName(name);
-        servicePackage.setAvailableOptionalProducts(products);
-        servicePackage.setAvailableValidityPeriods(validityPeriods);
-        servicePackage.setServices(services);
-        em.persist(servicePackage);
-        em.flush();
-        return servicePackage.getId();
     }
 
     public List<ServicePackage> getAllServicePackages() throws Exception {

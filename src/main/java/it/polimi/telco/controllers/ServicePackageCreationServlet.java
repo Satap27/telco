@@ -1,9 +1,12 @@
 package it.polimi.telco.controllers;
 
-import it.polimi.telco.services.ServiceEntryService;
+import it.polimi.telco.exceptions.InvalidServicePackageException;
+import it.polimi.telco.model.Product;
+import it.polimi.telco.model.ServiceEntry;
+import it.polimi.telco.model.TelcoService;
+import it.polimi.telco.model.ValidityPeriod;
+import it.polimi.telco.services.ProductService;
 import it.polimi.telco.services.ServicePackageService;
-import it.polimi.telco.services.TelcoServiceService;
-import it.polimi.telco.services.ValidityPeriodService;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @WebServlet(
         name = "servicePackageCreation",
@@ -24,12 +28,8 @@ import java.util.List;
 public class ServicePackageCreationServlet extends HttpServlet {
     @EJB(name = "it.polimi.telco.services/ServicePackageService")
     private ServicePackageService servicePackageService;
-    @EJB(name = "it.polimi.telco.services/ValidityPeriodService")
-    private ValidityPeriodService validityPeriodService;
-    @EJB(name = "it.polimi.telco.services/TelcoServiceService")
-    private TelcoServiceService telcoServiceService;
-    @EJB(name = "it.polimi.telco.services/ServiceEntryService")
-    private ServiceEntryService serviceEntryService;
+    @EJB(name = "it.polimi.telco.services/ProductService")
+    private ProductService productService;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -74,46 +74,54 @@ public class ServicePackageCreationServlet extends HttpServlet {
                 mobileInternetGBFee = Arrays.stream(request.getParameterValues("service-mobile-internet-fee")).mapToDouble(Double::parseDouble).toArray();
             }
             servicesNumber = fixedPhoneServices + mobilePhoneMinutesNumber.length + fixedInternetGBNumber.length + mobileInternetGBNumber.length;
+
             if (name == null || name.isEmpty()) {
-                throw new Exception("Missing or empty service package name");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or empty service package name");
             }
             if (validityPeriodsMonth.length == 0 || validityPeriodsFee.length == 0) {
-                throw new Exception("No validity periods provided");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No validity periods provided");
             }
             if (servicesNumber == 0) {
-                throw new Exception("No services provided");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST,"No services provided");
             }
 
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid values");
             return;
         }
+
         try {
-            long[] validityPeriodsId = new long[validityPeriodsMonth.length];
+            List<ValidityPeriod> validityPeriods = new ArrayList<>();
             for (int i = 0; i < validityPeriodsMonth.length; i++) {
-                validityPeriodsId[i] = validityPeriodService.createValidityPeriod(validityPeriodsMonth[i], validityPeriodsFee[i]);
+                validityPeriods.add(new ValidityPeriod(validityPeriodsMonth[i], validityPeriodsFee[i]));
             }
-            List<Long> servicesId = new ArrayList<>();
+
+            List<TelcoService> services = new ArrayList<>();
             for (int i = 0; i < fixedPhoneServices; i++) {
-                servicesId.add(telcoServiceService.createTelcoService("fixed phone", null));
+                services.add(new TelcoService("fixed phone", new ArrayList<>()));
             }
             for (int i = 0; i < mobilePhoneMinutesNumber.length; i++) {
-                long[] entriesId = new long[2];
-                entriesId[0] = serviceEntryService.createServiceEntry("minutes", mobilePhoneMinutesNumber[i], mobilePhoneMinutesFee[i]);
-                entriesId[1] = serviceEntryService.createServiceEntry("sms", mobilePhoneSMSNumber[i], mobilePhoneSMSFee[i]);
-                servicesId.add(telcoServiceService.createTelcoService("mobile phone", entriesId));
+                List<ServiceEntry> serviceEntries = new ArrayList<>();
+                serviceEntries.add(new ServiceEntry("minutes", mobilePhoneMinutesNumber[i], mobilePhoneMinutesFee[i]));
+                serviceEntries.add(new ServiceEntry("sms", mobilePhoneSMSNumber[i], mobilePhoneSMSFee[i]));
+                services.add(new TelcoService("mobile phone", serviceEntries));
             }
             for (int i = 0; i < fixedInternetGBNumber.length; i++) {
-                long entryId = serviceEntryService.createServiceEntry("gigabytes", fixedInternetGBNumber[i], fixedInternetGBFee[i]);
-                servicesId.add(telcoServiceService.createTelcoService("fixed internet", new long[]{entryId}));
+                List<ServiceEntry> serviceEntries = new ArrayList<>();
+                serviceEntries.add(new ServiceEntry("gigabytes", fixedInternetGBNumber[i], fixedInternetGBFee[i]));
+                services.add(new TelcoService("fixed internet", serviceEntries));
             }
             for (int i = 0; i < mobileInternetGBNumber.length; i++) {
-                long entryId = serviceEntryService.createServiceEntry("gigabytes", mobileInternetGBNumber[i], mobileInternetGBFee[i]);
-                servicesId.add(telcoServiceService.createTelcoService("mobile internet", new long[]{entryId}));
+                List<ServiceEntry> serviceEntries = new ArrayList<>();
+                serviceEntries.add(new ServiceEntry("gigabytes", mobileInternetGBNumber[i], mobileInternetGBFee[i]));
+                services.add(new TelcoService("mobile internet", serviceEntries));
             }
-            servicePackageService.createServicePackage(name, optionalProductsId, validityPeriodsId, servicesId.stream().mapToLong(i -> i).toArray());
-        } catch (Exception e) {
-            // TODO rollback?
+
+            List<Product> products = productService.findProductsById(optionalProductsId);
+            servicePackageService.createServicePackage(name, products, validityPeriods, services);
+        } catch (InvalidServicePackageException | NoSuchElementException e) {
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
+            return;
         }
         String path = getServletContext().getContextPath() + "/employeeHomepage";
         response.sendRedirect(path);

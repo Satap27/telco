@@ -1,6 +1,6 @@
 package it.polimi.telco.controllers;
 
-import it.polimi.telco.exceptions.InvalidSubscription;
+import it.polimi.telco.exceptions.InvalidSubscriptionException;
 import it.polimi.telco.model.ServicePackage;
 import it.polimi.telco.model.Subscription;
 
@@ -79,7 +79,7 @@ public class BuyServiceServlet extends HttpServlet {
 
         try {
             subscription = subscriptionService.createSubscription(servicePackageId, validityPeriodId, optionalProductsId, startDate, user);
-        } catch (InvalidSubscription e) {
+        } catch (InvalidSubscriptionException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Service package constraint are not met: " + e.getMessage());
             return;
         } catch (NoSuchElementException e) {
