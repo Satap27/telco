@@ -20,7 +20,7 @@ public class OrderService {
     private EntityManager em;
     @EJB(name = "it.polimi.telco.services/PriceCalculationService")
     private PriceCalculationService calculationService;
-    @EJB(name = "it.polimi.telco.services/PriceCalculationService")
+    @EJB(name = "it.polimi.telco.services/ActivationScheduleService")
     private ActivationScheduleService activationScheduleService;
 
     public OrderService() {
