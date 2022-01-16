@@ -22,11 +22,12 @@ public class UserService {
         return (em.find(User.class, userId));
     }
 
-    public long createUser(String username, String password, String email) {
+    public long createUser(String username, String password, String email, String role) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
+        user.setRole(role);
         em.persist(user);
         em.flush();
         return user.getId();

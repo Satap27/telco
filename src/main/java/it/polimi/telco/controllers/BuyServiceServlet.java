@@ -45,15 +45,15 @@ public class BuyServiceServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int servicePackageId;
-        int validityPeriodId;
-        int[] optionalProductsId = null;
+        long servicePackageId;
+        long validityPeriodId;
+        long[] optionalProductsId = null;
         Date startDate;
         try {
             servicePackageId = Integer.parseInt(request.getParameter("service-package"));
             validityPeriodId = Integer.parseInt(request.getParameter("validity-period"));
             if (request.getParameterMap().containsKey("optional-products")) {
-                optionalProductsId = Arrays.stream(request.getParameterValues("optional-products")).mapToInt(Integer::parseInt).toArray();
+                optionalProductsId = Arrays.stream(request.getParameterValues("optional-products")).mapToLong(Long::parseLong).toArray();
             }
             String startDateStr = request.getParameter("start-date");
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");

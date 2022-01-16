@@ -13,6 +13,16 @@ public class ServiceEntryService {
     public ServiceEntryService() {
     }
 
+    public long createServiceEntry(String type, int quantity, double fee) {
+        ServiceEntry serviceEntry = new ServiceEntry();
+        serviceEntry.setType(type);
+        serviceEntry.setQuantity(quantity);
+        serviceEntry.setFee(fee);
+        em.persist(serviceEntry);
+        em.flush();
+        return serviceEntry.getId();
+    }
+
     public ServiceEntry findServiceEntryById(long serviceEntryId) {
         return (em.find(ServiceEntry.class, serviceEntryId));
     }

@@ -39,7 +39,7 @@ public class RegistrationServlet extends HttpServlet {
             return;
         }
         // TODO handle if the user already exists?
-        userService.createUser(username, password, email);
+        userService.createUser(username, password, email, "user");
         String path = getServletContext().getContextPath() + "/landingPage";
         response.sendRedirect(path);
     }

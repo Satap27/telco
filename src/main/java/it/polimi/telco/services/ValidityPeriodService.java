@@ -13,6 +13,15 @@ public class ValidityPeriodService {
     public ValidityPeriodService() {
     }
 
+    public long createValidityPeriod(int months, double fee) {
+        ValidityPeriod validityPeriod = new ValidityPeriod();
+        validityPeriod.setNumberOfMonths(months);
+        validityPeriod.setMonthlyFee(fee);
+        em.persist(validityPeriod);
+        em.flush();
+        return validityPeriod.getId();
+    }
+
     public ValidityPeriod findValidityPeriodById(long validityPeriodId) {
         return (em.find(ValidityPeriod.class, validityPeriodId));
     }

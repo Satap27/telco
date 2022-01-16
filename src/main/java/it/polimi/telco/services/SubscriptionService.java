@@ -26,7 +26,7 @@ public class SubscriptionService {
         }
     }
 
-    public Subscription createSubscription(int servicePackageId, int validityPeriodId, int[] optionalProductsId, Date startDate, User user) throws Exception {
+    public Subscription createSubscription(long servicePackageId, long validityPeriodId, long[] optionalProductsId, Date startDate, User user) throws Exception {
         ServicePackage servicePackage = em.find(ServicePackage.class, servicePackageId);
         ValidityPeriod validityPeriod = em.find(ValidityPeriod.class, validityPeriodId);
         if (servicePackage == null || validityPeriod == null)
@@ -34,7 +34,7 @@ public class SubscriptionService {
             throw new NoSuchElementException();
         List<Product> productList = new ArrayList<>();
         if (optionalProductsId != null) {
-            for (int optionalProductId : optionalProductsId) {
+            for (long optionalProductId : optionalProductsId) {
                 Product product = em.find(Product.class, optionalProductId);
                 if (product == null) {
                     // TODO ok this exception?

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "product", schema = "telco")
+@NamedQuery(name = "Product.getAllProducts", query = "SELECT DISTINCT product FROM Product product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

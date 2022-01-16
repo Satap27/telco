@@ -1,7 +1,6 @@
 package it.polimi.telco.controllers;
 
 import it.polimi.telco.exceptions.CredentialsException;
-import it.polimi.telco.model.Subscription;
 import it.polimi.telco.model.User;
 import it.polimi.telco.services.UserService;
 import jakarta.ejb.EJB;
@@ -14,12 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @WebServlet(
-        name = "loginPage",
-        urlPatterns = {"/loginPage"}
+        name = "employeeLoginPage",
+        urlPatterns = {"/employeeLoginPage"}
 )
-public class LoginServlet extends HttpServlet {
+public class EmployeeLoginServlet extends HttpServlet {
     @EJB(name = "it.polimi.telco.services/UserService")
     private UserService userService;
 
@@ -51,12 +51,12 @@ public class LoginServlet extends HttpServlet {
 
         if (user == null) {
             request.setAttribute("errorMsg", "Incorrect username or password");
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            request.getRequestDispatcher("/employeeIndex.jsp").forward(request, response);
+        } else if (!Objects.equals(user.getRole(), "employee")) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You're not an employee");
         } else {
             request.getSession().setAttribute("user", user);
-            Subscription subscription = (Subscription) request.getSession().getAttribute("subscription");
-            String path = getServletContext().getContextPath();
-            path += subscription == null ? "/homepage" : "/confirmation";
+            String path = getServletContext().getContextPath() + "/employeeHomepage";
             response.sendRedirect(path);
         }
     }
