@@ -30,6 +30,7 @@ public class UserService {
             user.setPassword(password);
             user.setEmail(email);
             user.setRole(role);
+            user.setInsolvent(false);
             em.persist(user);
             em.flush();
             return user.getId();
