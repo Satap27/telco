@@ -15,12 +15,12 @@ public class ActivationSchedule {
     private long id;
 
     @NotNull
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "schedule_service", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_schedule"), inverseJoinColumns = @JoinColumn(name = "fk_id_service"))
     private List<TelcoService> services;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "fk_id_user")
     private User user;
 

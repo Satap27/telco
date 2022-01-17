@@ -25,7 +25,7 @@ public class Order {
     private Date creationDate;
 
     @NotNull
-    @OneToOne // TODO not one to one probably
+    @ManyToOne
     @JoinColumn(name = "fk_id_user")
     private User user;
 

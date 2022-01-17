@@ -28,7 +28,7 @@ public class Subscription {
     private List<Product> products;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "fk_id_user")
     private User user;
 
