@@ -32,10 +32,10 @@
         Below you can find the list of rejected orders. By clicking on one of them, you will be redirected to the
         confirmation
         page, in order to retry the payment.
-        <form method="post" action="homepage">
-            <select name="myselect" onchange="this.form.submit();">
+        <form method="post" action="restoreConfirmation">
+            <select id="order-id" name="order-id" onchange="this.form.submit();">
                 <c:forEach items="${rejectedOrders}" var="rejectedOrder">
-                    <option>${rejectedOrder.id}</option>
+                    <option id="">${rejectedOrder.id}</option>
                 </c:forEach>
             </select>
         </form>

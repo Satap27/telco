@@ -33,12 +33,6 @@ public class HomepageServlet extends HttpServlet {
         request.getRequestDispatcher("/homepage.jsp").forward(request, response);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //TODO create the redirect to confirmation page
-        super.doPost(req, resp);
-    }
-
     private void populateRequestWithServicePackages(HttpServletRequest request) {
         List<ServicePackage> servicePackages = null;
         try {
