@@ -16,16 +16,24 @@ public class ActivationSchedule {
 
     @NotNull
     @OneToMany
+    @JoinTable(name = "schedule_service", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_schedule"), inverseJoinColumns = @JoinColumn(name = "fk_id_service"))
     private List<TelcoService> services;
 
     @NotNull
-    @OneToMany
+    @OneToOne
+    @JoinColumn(name = "fk_id_user")
+    private User user;
+
+    @ManyToMany
+    @JoinTable(name = "schedule_product", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_schedule"), inverseJoinColumns = @JoinColumn(name = "fk_id_product"))
     private List<Product> optionalProducts;
 
     @NotNull
+    @Column(name = "date_of_activation")
     private Date dateOfActivation;
 
     @NotNull
+    @Column(name = "date_of_deactivation")
     private Date dateOfDeactivation;
 
     public long getId() {

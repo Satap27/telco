@@ -35,7 +35,7 @@ public class OrderService {
             invalidOrder = em.createNamedQuery("Order.getRejectedOrdersForUserId", Order.class).setParameter(1, user.getId())
                     .getResultList();
         } catch (PersistenceException e) {
-            throw new PersistenceException("Couldn't retrieve the invalid orders ");
+            throw new PersistenceException("Couldn't retrieve the invalid orders");
         }
         return invalidOrder;
     }

@@ -22,6 +22,7 @@ public class User implements Serializable {
     @NotNull
     private String username;
 
+    @NotNull
     private String email;
 
     @NotNull
