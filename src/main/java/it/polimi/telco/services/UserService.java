@@ -31,6 +31,7 @@ public class UserService {
             user.setEmail(email);
             user.setRole(role);
             user.setInsolvent(false);
+            user.setFailedPayments(0);
             em.persist(user);
             em.flush();
             return user.getId();

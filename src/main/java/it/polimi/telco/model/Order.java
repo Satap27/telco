@@ -8,8 +8,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "order", schema = "telco")
-@NamedQuery(name = "Order.getRejectedOrdersForUserId", query = "SELECT DISTINCT o FROM Order o" +
-        " LEFT JOIN FETCH o.user WHERE o.user.id = ?1 AND o.valid=false")
+@NamedQueries({
+    @NamedQuery(name = "Order.getRejectedOrdersForUserId", query = "SELECT DISTINCT o FROM Order o" +
+            " LEFT JOIN FETCH o.user WHERE o.user.id = ?1 AND o.valid=false"),
+    @NamedQuery(name = "Order.getFromSubscription", query = "SELECT DISTINCT o FROM Order o" +
+            " LEFT JOIN FETCH o.subscription WHERE o.subscription.id = ?1")})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +23,7 @@ public class Order {
     private Date creationDate;
 
     @NotNull
-    @OneToOne
+    @OneToOne // TODO not one to one probably
     @JoinColumn(name = "fk_id_user")
     private User user;
 
@@ -48,6 +51,11 @@ public class Order {
 
     @NotNull
     private boolean valid;
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "fk_id_subscription")
+    private Subscription subscription;
 
     public Long getId() {
         return id;
@@ -119,5 +127,13 @@ public class Order {
 
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
     }
 }

@@ -52,7 +52,7 @@ public class EmployeeLoginServlet extends HttpServlet {
             request.setAttribute("errorMsg", "Incorrect username or password");
             request.getRequestDispatcher("/employeeIndex.jsp").forward(request, response);
         } else if (!Objects.equals(user.getRole(), "employee")) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You're not an employee");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "You're not an employee");
         } else {
             request.getSession().setAttribute("user", user);
             String path = getServletContext().getContextPath() + "/employeeHomepage";

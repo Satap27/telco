@@ -31,6 +31,10 @@ public class User implements Serializable {
     @NotNull
     private boolean insolvent;
 
+    @NotNull
+    @Column(name = "failed_payments")
+    private int failedPayments;
+
     public User() {
     }
 
@@ -80,6 +84,14 @@ public class User implements Serializable {
 
     public void setInsolvent(boolean insolvent) {
         this.insolvent = insolvent;
+    }
+
+    public int getFailedPayments() {
+        return failedPayments;
+    }
+
+    public void setFailedPayments(int failedPayments) {
+        this.failedPayments = failedPayments;
     }
 }
 

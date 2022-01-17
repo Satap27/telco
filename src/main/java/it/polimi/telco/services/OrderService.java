@@ -22,6 +22,8 @@ public class OrderService {
     private PriceCalculationService calculationService;
     @EJB(name = "it.polimi.telco.services/ActivationScheduleService")
     private ActivationScheduleService activationScheduleService;
+    @EJB(name = "it.polimi.telco.services/AlertService")
+    private AlertService alertService;
 
     public OrderService() {
     }
@@ -40,19 +42,28 @@ public class OrderService {
         return invalidOrder;
     }
 
-    public void processOrder(Subscription subscription, User user) throws InvalidOrderException, InvalidSubscriptionException {
+    public User processOrder(Subscription subscription, User user) throws InvalidOrderException, InvalidSubscriptionException {
         // Inserting both subscription and order into the database inside the same transaction
+        User refreshedUser;
         try {
             subscription.setUser(user);
-            Order order = createOrderFromSubscription(subscription);
-            billingOrder(order);
-            em.persist(subscription);
-            em.persist(order);
+            Order existingOrder;
+            try {
+                existingOrder = em.createNamedQuery("Order.getFromSubscription", Order.class).setParameter(1, subscription.getId()).getSingleResult();
+                refreshedUser = billingOrder(existingOrder);
+                em.merge(existingOrder);
+            }  catch (PersistenceException e) {
+                existingOrder = createOrderFromSubscription(subscription);
+                refreshedUser = billingOrder(existingOrder);
+                em.persist(subscription);
+                em.persist(existingOrder);
+            }
             em.flush();
         }
         catch (PersistenceException e) {
             throw new InvalidOrderException("Invalid order or subscription");
         }
+        return refreshedUser;
     }
 
     public Order createOrderFromSubscription(Subscription subscription) throws InvalidSubscriptionException {
@@ -62,6 +73,7 @@ public class OrderService {
         Order order = new Order();
         order.setCreationDate(new Date());
         order.setValid(false);
+        order.setSubscription(subscription);
         populateOrderFromSubscription(subscription, order);
         return order;
     }
@@ -85,13 +97,26 @@ public class OrderService {
         order.setTotalPrice(calculationService.calculateSubscriptionTotalPrice(subscription));
     }
 
-    private void billingOrder(Order order) {
+    private User billingOrder(Order order) {
+        User user = order.getUser();
         if (billingService.billOrder(order)) {
             order.setValid(true);
             activationScheduleService.createServiceActivationRecordForOrder(order);
+            if (getRejectedOrdersForInsolventUser(user).isEmpty())
+                user.setInsolvent(false);
         } else {
-            order.getUser().setInsolvent(true);
-            // em.refresh(order.getUser());
+            int failedPayments = user.getFailedPayments();
+            user.setInsolvent(true);
+            user.setFailedPayments(failedPayments + 1);
+            if (failedPayments == 2) {
+                alertService.createAlert(user, order.getTotalPrice());
+            }
         }
+        em.merge(user);
+        return user;
+    }
+
+    public Order findOrderById(long orderId) {
+        return (em.find(Order.class, orderId));
     }
 }

@@ -35,7 +35,7 @@
         <form method="post" action="restoreConfirmation">
             <select id="order-id" name="order-id" onchange="this.form.submit();">
                 <c:forEach items="${rejectedOrders}" var="rejectedOrder">
-                    <option id="">${rejectedOrder.id}</option>
+                    <option value="${rejectedOrder.id}">${rejectedOrder.id}</option>
                 </c:forEach>
             </select>
         </form>

@@ -13,6 +13,8 @@
         <class>it.polimi.telco.model.ValidityPeriod</class>
         <class>it.polimi.telco.model.ServiceEntry</class>
         <class>it.polimi.telco.model.Order</class>
+        <class>it.polimi.telco.model.ActivationSchedule</class>
+        <class>it.polimi.telco.model.Alert</class>
         <class>it.polimi.telco.model.PurchasePerPackage</class>
         <class>it.polimi.telco.model.PurchasePerPackagePeriod</class>
         <class>it.polimi.telco.model.RevenuePerPackage</class>

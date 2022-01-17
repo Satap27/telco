@@ -47,9 +47,11 @@ public class ConfirmationServlet extends HttpServlet {
             return;
         }
         try {
-            orderService.processOrder(subscription, user);
+            User refreshedUser = orderService.processOrder(subscription, user);
             // if an exception is raised the subscription won't be removed from the session
+            request.getSession().setAttribute("user", refreshedUser);
             request.getSession().removeAttribute("subscription");
+            request.getSession().removeAttribute("totalPrice");
         } catch (InvalidOrderException | InvalidSubscriptionException e) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, e.getMessage());
             return;
