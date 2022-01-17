@@ -47,5 +47,45 @@
     </div>
     <br>
 </c:forEach>
+
+<h4>Insolvent users:</h4>
+
+<c:forEach items="${requestScope.insolventUsers}" var="insolventUser">
+    <div>
+        <div>${insolventUser.getUsername()}</div>
+    </div>
+    <br>
+</c:forEach>
+
+<h4>Suspended orders:</h4>
+
+<c:forEach items="${requestScope.suspendedOrders}" var="suspendedOrder">
+    <div>
+        <div>${suspendedOrder.getUser().getUsername()}</div>
+        <div>${suspendedOrder.getTotalPrice()}</div>
+    </div>
+    <br>
+</c:forEach>
+
+<h4>Alerts:</h4>
+
+<c:forEach items="${requestScope.alerts}" var="alert">
+    <div>
+        <div>${alert.getUser().getUsername()}</div>
+        <div>${alert.getAmount()}</div>
+        <div>${alert.getRejectionTime()}</div>
+    </div>
+    <br>
+</c:forEach>
+
+<c:set var="bestProduct" value="${requestScope.bestProduct}"/>
+<c:if test="${bestProduct != null}">
+    <h4>Best product:</h4>
+    <div>
+        <div>${bestProduct.getProductName()}</div>
+        <div>${bestProduct.getValue()}</div>
+    </div>
+    <br>
+</c:if>
 </body>
 </html>

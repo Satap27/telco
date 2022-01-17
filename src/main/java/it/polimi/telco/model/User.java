@@ -8,7 +8,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "user", schema = "telco")
-@NamedQuery(name = "User.checkCredentials", query = "SELECT u FROM User u  WHERE u.username = ?1 and u.password = ?2")
+@NamedQueries({
+    @NamedQuery(name = "User.checkCredentials", query = "SELECT u FROM User u  WHERE u.username = ?1 and u.password = ?2"),
+    @NamedQuery(name = "User.getAllInsolvents", query = "SELECT u FROM User u  WHERE u.insolvent = true"),
+})
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 

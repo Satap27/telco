@@ -1,12 +1,10 @@
 package it.polimi.telco.services;
 
-import it.polimi.telco.model.ProductsPerPackage;
-import it.polimi.telco.model.PurchasePerPackage;
-import it.polimi.telco.model.PurchasePerPackagePeriod;
-import it.polimi.telco.model.RevenuePerPackage;
+import it.polimi.telco.model.*;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceException;
 
 import java.util.List;
 
@@ -47,6 +45,17 @@ public class StatisticsService {
             return em.createNamedQuery("ProductsPerPackage.getAll", ProductsPerPackage.class).getResultList();
         } catch (Exception e) {
             throw new Exception("Couldn't retrieve average products per package");
+        }
+    }
+
+    public BestProduct getBestProduct() throws Exception {
+        try {
+            List<BestProduct> bestProducts = em.createNamedQuery("BestProduct.getBestProduct", BestProduct.class).getResultList();
+            if (bestProducts.isEmpty())
+                return null;
+            else return bestProducts.get(0);
+        } catch (Exception e) {
+            throw new Exception("Couldn't retrieve best product");
         }
     }
 }

@@ -119,4 +119,12 @@ public class OrderService {
     public Order findOrderById(long orderId) {
         return (em.find(Order.class, orderId));
     }
+
+    public List<Order> getAllSuspendedOrders() throws Exception {
+        try {
+            return em.createNamedQuery("Order.getAllSuspended", Order.class).getResultList();
+        } catch (Exception e) {
+            throw new Exception("Couldn't retrieve suspended orders");
+        }
+    }
 }

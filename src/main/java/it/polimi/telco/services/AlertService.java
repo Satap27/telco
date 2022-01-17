@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.util.Date;
+import java.util.List;
 
 @Stateless
 public class AlertService {
@@ -24,4 +25,11 @@ public class AlertService {
         em.persist(alert);
     }
 
+    public List<Alert> getAllAlerts() throws Exception {
+        try {
+            return em.createNamedQuery("Alert.getAll", Alert.class).getResultList();
+        } catch (Exception e) {
+            throw new Exception("Couldn't retrieve alerts");
+        }
+    }
 }

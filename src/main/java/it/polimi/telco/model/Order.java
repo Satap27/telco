@@ -12,7 +12,9 @@ import java.util.List;
     @NamedQuery(name = "Order.getRejectedOrdersForUserId", query = "SELECT DISTINCT o FROM Order o" +
             " LEFT JOIN FETCH o.user WHERE o.user.id = ?1 AND o.valid=false"),
     @NamedQuery(name = "Order.getFromSubscription", query = "SELECT DISTINCT o FROM Order o" +
-            " LEFT JOIN FETCH o.subscription WHERE o.subscription.id = ?1")})
+            " LEFT JOIN FETCH o.subscription WHERE o.subscription.id = ?1"),
+    @NamedQuery(name = "Order.getAllSuspended", query = "SELECT o FROM Order o WHERE o.valid = false")
+})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

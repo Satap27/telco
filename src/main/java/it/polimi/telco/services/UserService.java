@@ -58,4 +58,12 @@ public class UserService {
 
     }
 
+    public List<User> getAllInsolventUsers() throws Exception {
+        try {
+            return em.createNamedQuery("User.getAllInsolvents", User.class).getResultList();
+        } catch (Exception e) {
+            throw new Exception("Couldn't retrieve insolvent users");
+        }
+    }
+
 }

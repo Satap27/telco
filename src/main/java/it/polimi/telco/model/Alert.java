@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "alert", schema = "telco")
+@NamedQuery(name = "Alert.getAll", query = "SELECT a FROM Alert a")
 public class Alert implements Serializable {
 
     @Id
