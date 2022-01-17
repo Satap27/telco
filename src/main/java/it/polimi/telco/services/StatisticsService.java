@@ -1,5 +1,6 @@
 package it.polimi.telco.services;
 
+import it.polimi.telco.model.ProductsPerPackage;
 import it.polimi.telco.model.PurchasePerPackage;
 import it.polimi.telco.model.PurchasePerPackagePeriod;
 import it.polimi.telco.model.RevenuePerPackage;
@@ -38,6 +39,14 @@ public class StatisticsService {
             return em.createNamedQuery("RevenuePerPackage.getAll", RevenuePerPackage.class).getResultList();
         } catch (Exception e) {
             throw new Exception("Couldn't retrieve revenues per package");
+        }
+    }
+
+    public List<ProductsPerPackage> getAllProductsPerPackage() throws Exception {
+        try {
+            return em.createNamedQuery("ProductsPerPackage.getAll", ProductsPerPackage.class).getResultList();
+        } catch (Exception e) {
+            throw new Exception("Couldn't retrieve average products per package");
         }
     }
 }

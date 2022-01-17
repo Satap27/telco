@@ -37,5 +37,15 @@
     </div>
     <br>
 </c:forEach>
+
+<h4>Average products bought per package:</h4>
+
+<c:forEach items="${requestScope.productsPerPackage}" var="productPerPackage">
+    <div>
+        <div>${productPerPackage.getPackageName()}</div>
+        <div>${productPerPackage.getProductsAverage()}</div>
+    </div>
+    <br>
+</c:forEach>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package it.polimi.telco.controllers;
 
+import it.polimi.telco.model.ProductsPerPackage;
 import it.polimi.telco.model.PurchasePerPackage;
 import it.polimi.telco.model.PurchasePerPackagePeriod;
 import it.polimi.telco.model.RevenuePerPackage;
@@ -28,10 +29,12 @@ public class SalesReportServlet extends HttpServlet {
         List<PurchasePerPackage>  purchasesPerPackage = null;
         List<PurchasePerPackagePeriod>  purchasesPerPackagePeriod = null;
         List<RevenuePerPackage>  revenuesPerPackage = null;
+        List<ProductsPerPackage>  productsPerPackage = null;
         try {
             purchasesPerPackage = statisticsService.getAllPurchasesPerPackage();
             purchasesPerPackagePeriod = statisticsService.getAllPurchasesPerPackagePeriod();
             revenuesPerPackage = statisticsService.getAllRevenuesPerPackage();
+            productsPerPackage = statisticsService.getAllProductsPerPackage();
         } catch (Exception e) {
             // TODO throw
             e.printStackTrace();
@@ -39,6 +42,7 @@ public class SalesReportServlet extends HttpServlet {
         request.setAttribute("purchasesPerPackage", purchasesPerPackage);
         request.setAttribute("purchasesPerPackagePeriod", purchasesPerPackagePeriod);
         request.setAttribute("revenuesPerPackage", revenuesPerPackage);
+        request.setAttribute("productsPerPackage", productsPerPackage);
         request.getRequestDispatcher("/salesReport.jsp").forward(request, response);
     }
 }

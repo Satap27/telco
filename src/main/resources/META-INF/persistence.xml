@@ -16,5 +16,6 @@
         <class>it.polimi.telco.model.PurchasePerPackage</class>
         <class>it.polimi.telco.model.PurchasePerPackagePeriod</class>
         <class>it.polimi.telco.model.RevenuePerPackage</class>
+        <class>it.polimi.telco.model.ProductsPerPackage</class>
     </persistence-unit>
 </persistence>
