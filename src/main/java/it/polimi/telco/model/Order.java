@@ -8,6 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "order", schema = "telco")
+@NamedQuery(name = "Order.getRejectedOrdersForUserId", query = "SELECT DISTINCT o FROM Order o" +
+        " LEFT JOIN FETCH o.user WHERE o.user.id = ?1 AND o.valid=false")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
