@@ -91,6 +91,7 @@ public class OrderService {
             activationScheduleService.createServiceActivationRecordForOrder(order);
         } else {
             order.getUser().setInsolvent(true);
+            // em.refresh(order.getUser());
         }
     }
 }
