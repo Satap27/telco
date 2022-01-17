@@ -30,7 +30,7 @@ public class ActivationScheduleService {
         activationSchedule.setServices(services);
         activationSchedule.setOptionalProducts(products);
         activationSchedule.setUser(user);
-        //em.persist(activationSchedule);
+        em.persist(activationSchedule);
     }
 
 }

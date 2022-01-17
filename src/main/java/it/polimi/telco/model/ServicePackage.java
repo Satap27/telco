@@ -21,7 +21,7 @@ public class ServicePackage {
     private String name;
 
     @NotNull
-    @OneToMany(mappedBy = "servicePackage", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "servicePackage", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TelcoService> services;
 
     @NotNull
