@@ -13,12 +13,8 @@
         <class>it.polimi.telco.model.ValidityPeriod</class>
         <class>it.polimi.telco.model.ServiceEntry</class>
         <class>it.polimi.telco.model.Order</class>
-        <!--<properties>
-            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/telco"/>
-            <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="root"/>
-            <property name="jakarta.persistence.logging.level" value="FINE"/>
-        </properties>-->
+        <class>it.polimi.telco.model.PurchasePerPackage</class>
+        <class>it.polimi.telco.model.PurchasePerPackagePeriod</class>
+        <class>it.polimi.telco.model.RevenuePerPackage</class>
     </persistence-unit>
 </persistence>
