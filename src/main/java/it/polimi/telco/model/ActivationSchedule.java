@@ -75,4 +75,12 @@ public class ActivationSchedule {
     public void setDateOfDeactivation(Date dateOfDeactivation) {
         this.dateOfDeactivation = dateOfDeactivation;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -23,12 +23,13 @@ public class UserService {
         return (em.find(User.class, userId));
     }
 
-    public long createUser(String username, String password, String email) throws ExistingUserException {
+    public long createUser(String username, String password, String email, String role) throws ExistingUserException {
         try {
             User user = new User();
             user.setUsername(username);
             user.setPassword(password);
             user.setEmail(email);
+            user.setRole(role);
             user.setInsolvent(false);
             em.persist(user);
             em.flush();

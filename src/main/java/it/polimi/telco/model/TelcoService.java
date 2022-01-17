@@ -16,9 +16,22 @@ public class TelcoService {
     private String type;
 
     @NotNull
-    @ManyToMany
-    @JoinTable(name = "service_entry", schema = "telco", joinColumns = @JoinColumn(name = "fk_id_service"), inverseJoinColumns = @JoinColumn(name = "fk_id_entry"))
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
     private List<ServiceEntry> serviceEntries;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "fk_id_package")
+    private ServicePackage servicePackage;
+
+    public TelcoService(String type, List<ServiceEntry> serviceEntries) {
+        this.type = type;
+        setServiceEntries(serviceEntries);
+    }
+
+    public TelcoService() {
+
+    }
 
     public long getId() {
         return id;
@@ -42,5 +55,16 @@ public class TelcoService {
 
     public void setServiceEntries(List<ServiceEntry> serviceEntries) {
         this.serviceEntries = serviceEntries;
+        for (ServiceEntry entry: serviceEntries) {
+            entry.setService(this);
+        }
+    }
+
+    public ServicePackage getServicePackage() {
+        return servicePackage;
+    }
+
+    public void setServicePackage(ServicePackage servicePackage) {
+        this.servicePackage = servicePackage;
     }
 }

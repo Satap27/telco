@@ -1,7 +1,7 @@
 package it.polimi.telco.services;
 
-import it.polimi.telco.exceptions.InvalidOrder;
-import it.polimi.telco.exceptions.InvalidSubscription;
+import it.polimi.telco.exceptions.InvalidOrderException;
+import it.polimi.telco.exceptions.InvalidSubscriptionException;
 import it.polimi.telco.model.*;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
@@ -14,10 +14,10 @@ import java.util.List;
 
 @Stateless
 public class OrderService {
-    @EJB(name = "it.polimi.telco.services/BillingService")
-    BillingService billingService;
     @PersistenceContext(unitName = "TelcoEJB")
     private EntityManager em;
+    @EJB(name = "it.polimi.telco.services/BillingService")
+    BillingService billingService;
     @EJB(name = "it.polimi.telco.services/PriceCalculationService")
     private PriceCalculationService calculationService;
     @EJB(name = "it.polimi.telco.services/ActivationScheduleService")
@@ -40,7 +40,7 @@ public class OrderService {
         return invalidOrder;
     }
 
-    public void processOrder(Subscription subscription, User user) throws InvalidOrder, InvalidSubscription {
+    public void processOrder(Subscription subscription, User user) throws InvalidOrderException, InvalidSubscriptionException {
         // Inserting both subscription and order into the database inside the same transaction
         try {
             subscription.setUser(user);
@@ -51,13 +51,13 @@ public class OrderService {
             em.flush();
         }
         catch (PersistenceException e) {
-            throw new InvalidOrder("Invalid order or subscription");
+            throw new InvalidOrderException("Invalid order or subscription");
         }
     }
 
-    public Order createOrderFromSubscription(Subscription subscription) throws InvalidSubscription {
+    public Order createOrderFromSubscription(Subscription subscription) throws InvalidSubscriptionException {
         if (subscription == null) {
-            throw new InvalidSubscription("Subscription object is null");
+            throw new InvalidSubscriptionException("Subscription object is null");
         }
         Order order = new Order();
         order.setCreationDate(new Date());
@@ -66,7 +66,7 @@ public class OrderService {
         return order;
     }
 
-    protected void populateOrderFromSubscription(Subscription subscription, Order order) throws InvalidSubscription {
+    protected void populateOrderFromSubscription(Subscription subscription, Order order) throws InvalidSubscriptionException {
         User user = subscription.getUser();
         ServicePackage servicePackage = subscription.getServicePackage();
         ValidityPeriod validityPeriod = subscription.getValidityPeriod();
@@ -74,7 +74,7 @@ public class OrderService {
         Date subscriptionStartDate = subscription.getStartDate();
 
         if (user == null || servicePackage == null || validityPeriod == null || optionalProducts == null || subscriptionStartDate == null) {
-            throw new InvalidSubscription("The subscription object used for creating the order is invalid");
+            throw new InvalidSubscriptionException("The subscription object used for creating the order is invalid");
         }
 
         order.setUser(user);
@@ -91,6 +91,7 @@ public class OrderService {
             activationScheduleService.createServiceActivationRecordForOrder(order);
         } else {
             order.getUser().setInsolvent(true);
+            // em.refresh(order.getUser());
         }
     }
 }

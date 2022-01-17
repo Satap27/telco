@@ -18,6 +18,20 @@ public class ValidityPeriod {
     @Column(name = "monthly_fee")
     private double monthlyFee;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "fk_id_package")
+    private ServicePackage servicePackage;
+
+    public ValidityPeriod(int numberOfMonths, double monthlyFee) {
+        this.numberOfMonths = numberOfMonths;
+        this.monthlyFee = monthlyFee;
+    }
+
+    public ValidityPeriod() {
+
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -40,5 +54,13 @@ public class ValidityPeriod {
 
     public void setMonthlyFee(double monthlyFee) {
         this.monthlyFee = monthlyFee;
+    }
+
+    public ServicePackage getServicePackage() {
+        return servicePackage;
+    }
+
+    public void setServicePackage(ServicePackage servicePackage) {
+        this.servicePackage = servicePackage;
     }
 }

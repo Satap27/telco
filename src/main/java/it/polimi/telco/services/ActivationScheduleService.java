@@ -1,9 +1,6 @@
 package it.polimi.telco.services;
 
-import it.polimi.telco.model.ActivationSchedule;
-import it.polimi.telco.model.Order;
-import it.polimi.telco.model.Product;
-import it.polimi.telco.model.TelcoService;
+import it.polimi.telco.model.*;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,19 +22,15 @@ public class ActivationScheduleService {
         List<Product> products = order.getProducts();
         Date activationDate = order.getStartDate();
         Date deactivationDate = DateUtils.addMonths(activationDate, order.getValidityPeriod().getNumberOfMonths());
+        User user = order.getUser();
 
         ActivationSchedule activationSchedule = new ActivationSchedule();
         activationSchedule.setDateOfActivation(activationDate);
         activationSchedule.setDateOfDeactivation(deactivationDate);
         activationSchedule.setServices(services);
         activationSchedule.setOptionalProducts(products);
-        //saveActivationSchedule(activationSchedule);
+        activationSchedule.setUser(user);
+        //em.persist(activationSchedule);
     }
-
-    protected void saveActivationSchedule(ActivationSchedule activationSchedule) {
-        em.persist(activationSchedule);
-        em.flush();
-    }
-
 
 }
