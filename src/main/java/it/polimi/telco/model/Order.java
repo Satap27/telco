@@ -22,6 +22,7 @@ public class Order {
 
     @NotNull
     @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
     @NotNull
@@ -49,6 +50,7 @@ public class Order {
 
     @NotNull
     @Column(name = "start_date")
+    @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @NotNull

@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class OrderService {
 
     public List<Order> getRejectedOrdersForInsolventUser(User user){
         if(!user.isInsolvent()){
-            return null;
+            return new ArrayList<>();
         }
         List<Order> invalidOrder;
         try {

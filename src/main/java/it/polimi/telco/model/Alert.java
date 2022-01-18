@@ -26,6 +26,7 @@ public class Alert implements Serializable {
 
     @NotNull
     @Column(name = "rejection_time")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date rejectionTime;
 
     public long getId() {

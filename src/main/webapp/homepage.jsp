@@ -59,7 +59,7 @@
 </div>
 
 <c:set var="rejectedOrders" value="${requestScope.rejectedOrders}"/>
-<c:if test="${rejectedOrders != null}">
+<c:if test="${!rejectedOrders.isEmpty()}">
 <div class="main-container" style="margin-top: 30px;">
     <div class="service-package-div" style="width: 300px;">
         Below you can find the list of rejected orders. By clicking the button you can retry the payment.

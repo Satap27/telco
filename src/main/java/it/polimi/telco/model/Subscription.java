@@ -34,6 +34,7 @@ public class Subscription {
 
     @NotNull
     @Column(name = "start_date")
+    @Temporal(TemporalType.DATE)
     private Date startDate;
 
     public long getId() {

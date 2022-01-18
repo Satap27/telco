@@ -30,10 +30,12 @@ public class ActivationSchedule {
 
     @NotNull
     @Column(name = "date_of_activation")
+    @Temporal(TemporalType.DATE)
     private Date dateOfActivation;
 
     @NotNull
     @Column(name = "date_of_deactivation")
+    @Temporal(TemporalType.DATE)
     private Date dateOfDeactivation;
 
     public long getId() {
