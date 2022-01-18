@@ -23,12 +23,12 @@ public class EmployeeHomepageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Product> optionalProducts = null;
+        List<Product> optionalProducts;
         try {
             optionalProducts = productService.getAllProducts();
         } catch (Exception e) {
-            // TODO throw
-            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Couldn't retrieve products");
+            return;
         }
         request.setAttribute("optionalProducts", optionalProducts);
         request.getRequestDispatcher("/employeeHomepage.jsp").forward(request, response);

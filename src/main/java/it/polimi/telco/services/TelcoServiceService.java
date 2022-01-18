@@ -24,7 +24,6 @@ public class TelcoServiceService {
             for (long entryId : entriesId) {
                 ServiceEntry serviceEntry = em.find(ServiceEntry.class, entryId);
                 if (serviceEntry == null) {
-                    // TODO ok this exception?
                     throw new NoSuchElementException();
                 }
                 serviceEntries.add(serviceEntry);
