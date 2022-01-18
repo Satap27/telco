@@ -42,7 +42,7 @@ public class OrderService {
         return invalidOrder;
     }
 
-    public User processOrder(Subscription subscription, User user) throws InvalidOrderException, InvalidSubscriptionException {
+    public User processOrder(Subscription subscription, User user, boolean fail) throws InvalidOrderException, InvalidSubscriptionException {
         // Inserting both subscription and order into the database inside the same transaction
         User refreshedUser;
         try {
@@ -50,11 +50,11 @@ public class OrderService {
             Order existingOrder;
             try {
                 existingOrder = em.createNamedQuery("Order.getFromSubscription", Order.class).setParameter(1, subscription.getId()).getSingleResult();
-                refreshedUser = billingOrder(existingOrder);
+                refreshedUser = billingOrder(existingOrder, fail);
                 em.merge(existingOrder);
             }  catch (PersistenceException e) {
                 existingOrder = createOrderFromSubscription(subscription);
-                refreshedUser = billingOrder(existingOrder);
+                refreshedUser = billingOrder(existingOrder, fail);
                 em.persist(subscription);
                 em.persist(existingOrder);
             }
@@ -97,9 +97,9 @@ public class OrderService {
         order.setTotalPrice(calculationService.calculateSubscriptionTotalPrice(subscription));
     }
 
-    private User billingOrder(Order order) {
+    private User billingOrder(Order order, boolean fail) {
         User user = order.getUser();
-        if (billingService.billOrder(order)) {
+        if (billingService.billOrder(order, fail)) {
             order.setValid(true);
             activationScheduleService.createServiceActivationRecordForOrder(order);
             if (getRejectedOrdersForInsolventUser(user).isEmpty())

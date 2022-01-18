@@ -5,14 +5,14 @@ import jakarta.ejb.Stateless;
 
 @Stateless
 public class BillingService {
-    public boolean billOrder(Order order) {
+    public boolean billOrder(Order order, boolean fail) {
         boolean successfulBilling;
-        successfulBilling = mockBillingService(order);
+        successfulBilling = mockBillingService(fail);
         return successfulBilling;
     }
 
-    private boolean mockBillingService(Order order) {
-        return ((int) (order.getTotalPrice())) % 2 == 0;
+    private boolean mockBillingService(boolean fail) {
+        return !fail;
     }
 }
 

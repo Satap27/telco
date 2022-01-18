@@ -29,8 +29,7 @@ public class ConfirmationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Subscription subscription = (Subscription) request.getSession().getAttribute("subscription");
         if (subscription == null) {
-            // TODO what should i do in this case?
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "TODO");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No subscription retrieved");
             return;
         }
         request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
@@ -40,6 +39,7 @@ public class ConfirmationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        boolean fail = request.getParameterMap().containsKey("fail");
         Subscription subscription = (Subscription) request.getSession().getAttribute("subscription");
         User user = (User) request.getSession().getAttribute("user");
         if (user == null || subscription == null) {
@@ -47,7 +47,7 @@ public class ConfirmationServlet extends HttpServlet {
             return;
         }
         try {
-            User refreshedUser = orderService.processOrder(subscription, user);
+            User refreshedUser = orderService.processOrder(subscription, user, fail);
             // if an exception is raised the subscription won't be removed from the session
             request.getSession().setAttribute("user", refreshedUser);
             request.getSession().removeAttribute("subscription");
